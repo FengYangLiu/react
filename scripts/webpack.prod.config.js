@@ -1,12 +1,15 @@
-
 const webpack = require('webpack')
 const path = require('path')
 const merge = require('webpack-merge')
 const webpackConfigBase = require('./webpack.base.config')
 const Copy = require('copy-webpack-plugin')
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const {
+  BundleAnalyzerPlugin
+} = require('webpack-bundle-analyzer')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const {
+  CleanWebpackPlugin
+} = require('clean-webpack-plugin')
 const TerserJSPlugin = require("terser-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
@@ -25,7 +28,7 @@ const webpackConfigProd = {
       new TerserJSPlugin({ // 多进程压缩
         // 设置缓存目录
         cache: path.resolve('.cache'),
-        parallel: 4,// 开启多进程压缩
+        parallel: 4, // 开启多进程压缩
         // sourceMap,
         terserOptions: {
           compress: {
@@ -47,16 +50,18 @@ const webpackConfigProd = {
       // inject: true, // will inject the main bundle to index.html
       template: resolve('../app/index.html'),
       // mapConfig:'http://192.168.0.1/map_config.js',
-      // 这里列出要加入html中的js文件
+      // 这里列出要加入html中的js文件  注释不用dll
       dlls: [
-        './resource/dll/vendor.dll.js',
-        './resource/dll/redux.dll.js',
+        // './resource/dll/vendor.dll.js',
+        // './resource/dll/redux.dll.js',
       ],
     }),
     // 分析代码
-    new BundleAnalyzerPlugin({ analyzerMode: 'static' }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static'
+    }),
     new Copy([
-      { from: './app/resource/dll', to: '../dist/resource/dll' },
+      // { from: './app/resource/dll', to: '../dist/resource/dll' },
     ]),
     new OptimizeCSSAssetsPlugin(),
     new CleanWebpackPlugin(),

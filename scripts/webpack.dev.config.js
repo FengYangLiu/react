@@ -1,19 +1,35 @@
-
 const path = require('path')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const webpackConfigBase = require('./webpack.base.config')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { CleanWebpackPlugin }  = require('clean-webpack-plugin')
-const os = require('os');
-let selfIp;
+const {
+  CleanWebpackPlugin
+} = require('clean-webpack-plugin')
+const os = require('os')
+let selfIp
 try {
-  selfIp = os.networkInterfaces()['WLAN'][1].address;
+  // selfIp = os.networkInterfaces()['WLAN'][1].address
+  selfIp = getIpAddress()
 } catch (e) {
   selfIp = 'localhost'
 }
 
 const PORT = 8888
+// 精确的获取本机ip地址
+function getIpAddress() {
+  const interfaces = require('os').networkInterfaces
+  for (let devName in interfaces) {
+    const iface = interfaces[devName]
+    for (let i = 0; i < iface.length; i += 1) {
+      let alias = iface[i]
+      if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+        return alias.address
+      }
+    }
+  }
+}
+
 function resolve(relatedPath) {
   return path.join(__dirname, relatedPath)
 }
@@ -38,7 +54,7 @@ const webpackConfigDev = {
     contentBase: resolve('../app'),
     historyApiFallback: false,
     open: true,
-    hot: true, 
+    hot: true,
     host: selfIp,
     port: PORT,
   },
